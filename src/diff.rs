@@ -43,7 +43,7 @@ pub fn print_commit_content(
 
                         println!("path: {}:{}:", file_path, line_number);
                     } else {
-                        println!("path: {}", file_path);
+                        println!("path: {}:", file_path);
                     }
                 }
 
