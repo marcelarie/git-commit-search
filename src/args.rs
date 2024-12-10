@@ -19,7 +19,7 @@ pub fn parse_args() -> (String, String, usize) {
         )
         .arg(
             Arg::new("context_lines")
-                .long("context")
+                .long("conlines")
                 .short('l')
                 .help("The number of context lines to show")
                 .value_parser(clap::value_parser!(usize))

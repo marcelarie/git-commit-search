@@ -56,7 +56,10 @@ This will search for the string "TODO" in all commits of the specified repositor
 
 ## Options
 
-- **`-p, --path`**: The path to the repository (optional, defaults to the current directory).
+- **`-p, --path`**: The path to the repository (optional, defaults to the
+  current directory).
+- **`-l, --conlines`**: The number of context lines to display on the top and
+  bottom of the match (optional, defaults to 1).
 
 ## Dependencies
 
