@@ -12,7 +12,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (regex, path, context_lines) = parse_args();
 
     let regex = Regex::new(&regex)?;
-    let repo = Repository::open(path)?;
+    let repo = Repository::open(&path)?;
 
     // Walk through commits
     let mut revwalk = repo.revwalk()?;
@@ -32,12 +32,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             None => repo.diff_tree_to_tree(None, Some(&tree), None)?,
         };
 
-        print_commit_content(
-            &diff,
-            &regex,
-            commit_id,
-            context_lines,
-        )?;
+        print_commit_content(&diff, &regex, commit_id, context_lines, &path)?;
     }
 
     Ok(())

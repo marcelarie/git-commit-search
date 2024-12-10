@@ -1,13 +1,31 @@
+use std::path::Path;
+
 use crate::{commit::print_commit, utils::ChangeType};
 use colored::*;
 use git2::{Diff, Oid};
+use ignore::gitignore::GitignoreBuilder;
 use regex::Regex;
+
+const GIT_IGNORE_FILE_PATH: &str = ".gitignore";
+
+fn is_ignored(repo_path: &str, file_path: &str) -> bool {
+    let mut builder = GitignoreBuilder::new(repo_path);
+    builder.add(GIT_IGNORE_FILE_PATH);
+    let gitignore = builder.build().expect("Failed to build gitignore");
+
+    let path = Path::new(file_path);
+    let is_dir = path.is_dir();
+
+    let matched = gitignore.matched(path, is_dir);
+    matched.is_ignore()
+}
 
 pub fn print_commit_content(
     diff: &Diff,
     regex: &Regex,
     commit_id: Oid,
     context_lines: usize,
+    repo_path: &str,
 ) -> Result<(), git2::Error> {
     let mut lines_buffer = Vec::new();
     let mut post_match_buffer = 0; // Counter for lines after a match
@@ -29,21 +47,29 @@ pub fn print_commit_content(
                 '-' => Some(ChangeType::Deletion),
                 _ => None,
             } {
-                if !printed_commit {
-                    print_commit(&commit_id.to_string());
-                    printed_commit = true;
-                }
-
                 if let Some(path) = delta.new_file().path() {
-                    let file_path =
-                        format!("{}", path.display()).bold().to_string();
+                    let file_path = path.display();
+                    let should_ignore_file =
+                        is_ignored(repo_path, &file_path.to_string());
+
+                    if should_ignore_file {
+                        return true;
+                    }
+
+                    if !printed_commit {
+                        print_commit(&commit_id.to_string());
+                        printed_commit = true;
+                    }
+
+                    let pretty_file_path =
+                        format!("{}", file_path).bold().to_string();
                     if let Some(line_number) = line.new_lineno() {
                         let line_number =
                             format!("{}", line_number).bold().red().to_string();
 
-                        println!("path: {}:{}:", file_path, line_number);
+                        println!("path: {}:{}:", pretty_file_path, line_number);
                     } else {
-                        println!("path: {}:", file_path);
+                        println!("path: {}:", pretty_file_path);
                     }
                 }
 
