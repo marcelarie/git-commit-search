@@ -31,10 +31,23 @@ Run the tool with the desired regex pattern and optional repository path:
 gcs --regex "<REGEX>" --path /path/to/repo
 ```
 
-### Example:
+### Examples:
 
 ```bash
+# Search for the text TODO 
 gcs -r "TODO" -p ~/my-project
+
+# Search for TODO comments with assignee
+gcs -r "TODO\s*\(@\w+\):" -p ~/my-project
+
+# Find password or API key assignments
+gcs -r "(?i)(password|api_key)\s*=\s*['\"][^'\"]+['\"]"
+
+# Search for removed test functions
+gcs -r "^-\s*#\[test\]"
+
+# Find version bumps in Cargo.toml
+gcs -r '+version\s*=\s*"\d+\.\d+\.\d+"'
 ```
 
 This will search for the string "TODO" in all commits of the specified repository.
