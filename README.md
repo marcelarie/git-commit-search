@@ -13,6 +13,7 @@ regex. Then it prints all the matches.
 ## Features
 
 - Search for specific patterns via regex on all commits and diffs.
+- Respects gitignore rules by default.
 - Display matching content.
 
 ## Installation
