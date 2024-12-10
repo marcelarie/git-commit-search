@@ -1,8 +1,12 @@
-use crate::utils::ChangeType;
-use git2::Diff;
+use crate::{commit::print_commit, utils::ChangeType};
+use git2::{Diff, Oid};
 use regex::Regex;
 
-pub fn print_diff(diff: &Diff, regex: &Regex) -> Result<(), git2::Error> {
+pub fn print_diff(
+    diff: &Diff,
+    regex: &Regex,
+    commit_id: Oid,
+) -> Result<(), git2::Error> {
     diff.print(git2::DiffFormat::Patch, |_, _, line| {
         let content = String::from_utf8_lossy(line.content());
 
@@ -12,9 +16,8 @@ pub fn print_diff(diff: &Diff, regex: &Regex) -> Result<(), git2::Error> {
                 '-' => Some(ChangeType::Deletion),
                 _ => None,
             } {
+                print_commit(&commit_id.to_string());
                 println!("{}", change_type.format_line(&content));
-            } else {
-                println!("{}", content);
             }
         }
         true
