@@ -58,6 +58,7 @@ This will search for the string "TODO" in all commits of the specified repositor
 ## Todo
 
 - [ ] Interactive mode.
+  - [ ] Real time regex search.
   - [ ] View the whole commit.
   - [ ] View the whole diff.
   - [ ] Go to next match
@@ -68,6 +69,7 @@ This will search for the string "TODO" in all commits of the specified repositor
 
 - [x] Search using a dir path. (-p,--path).
 - [x] Show context lines. (-l,--conlines).
+- [ ] .gitignore arguments (-
 
 ## Dependencies
 
