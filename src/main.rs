@@ -4,9 +4,11 @@ mod diff;
 mod utils;
 
 use args::parse_args;
-use diff::print_diff;
+use diff::print_commit_content;
 use git2::Repository;
 use regex::Regex;
+
+const DEFAULT_NUMBER_CONTEXT_LINES: usize = 1;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (regex, path) = parse_args();
@@ -22,18 +24,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let oid = oid?;
         let commit = repo.find_commit(oid)?;
         let commit_id = commit.id();
-
         let tree = commit.tree()?;
 
-        if let Some(parent) = commit.parents().next() {
-            let parent_tree = parent.tree()?;
-            let diff =
-                repo.diff_tree_to_tree(Some(&parent_tree), Some(&tree), None)?;
-            print_diff(&diff, &regex, commit_id)?;
-        } else {
-            let diff = repo.diff_tree_to_tree(None, Some(&tree), None)?;
-            print_diff(&diff, &regex, commit_id)?;
-        }
+        let diff = match commit.parents().next() {
+            Some(parent) => {
+                let parent_tree = parent.tree()?;
+                repo.diff_tree_to_tree(Some(&parent_tree), Some(&tree), None)?
+            }
+            None => repo.diff_tree_to_tree(None, Some(&tree), None)?,
+        };
+
+        print_commit_content(
+            &diff,
+            &regex,
+            commit_id,
+            DEFAULT_NUMBER_CONTEXT_LINES,
+        )?;
     }
 
     Ok(())
