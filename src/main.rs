@@ -8,10 +8,8 @@ use diff::print_commit_content;
 use git2::Repository;
 use regex::Regex;
 
-const DEFAULT_NUMBER_CONTEXT_LINES: usize = 1;
-
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let (regex, path) = parse_args();
+    let (regex, path, context_lines) = parse_args();
 
     let regex = Regex::new(&regex)?;
     let repo = Repository::open(path)?;
@@ -38,7 +36,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             &diff,
             &regex,
             commit_id,
-            DEFAULT_NUMBER_CONTEXT_LINES,
+            context_lines,
         )?;
     }
 
