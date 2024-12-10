@@ -54,6 +54,7 @@ This will search for the string "TODO" in all commits of the specified repositor
   current directory).
 - **`-l, --conlines`**: The number of context lines to display on the top and
   bottom of the match (optional, defaults to 1).
+- **`--no-gitignore`**: Ignore `.gitignore` rules.
 
 ## Todo
 
