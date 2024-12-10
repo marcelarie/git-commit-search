@@ -35,18 +35,15 @@ pub fn print_commit_content(
                 }
 
                 if let Some(path) = delta.new_file().path() {
+                    let file_path =
+                        format!("{}", path.display()).bold().to_string();
                     if let Some(line_number) = line.new_lineno() {
-                        let file_path =
-                            format!("{}", path.display()).bold().to_string();
                         let line_number =
                             format!("{}", line_number).bold().red().to_string();
 
-                        println!(
-                            "path: {}:{}:",
-                            file_path, line_number
-                        );
+                        println!("path: {}:{}:", file_path, line_number);
                     } else {
-                        println!("path: {}", path.display());
+                        println!("path: {}", file_path);
                     }
                 }
 
