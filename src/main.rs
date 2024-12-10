@@ -9,7 +9,7 @@ use git2::Repository;
 use regex::Regex;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let (regex, path, context_lines) = parse_args();
+    let (regex, path, context_lines, no_gitignore) = parse_args();
 
     let regex = Regex::new(&regex)?;
     let repo = Repository::open(&path)?;
