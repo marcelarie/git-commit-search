@@ -74,8 +74,6 @@ pub fn print_commit_content(
                     }
                 }
 
-                println!(); // Newline to separate the commit info from the diff
-
                 // Print context lines before the match
                 if !lines_buffer.is_empty() && context_lines > 0 {
                     for buffered_line in &lines_buffer {
