@@ -12,7 +12,6 @@ pub fn print_commit_content(
     let mut lines_buffer = Vec::new();
     let mut post_match_buffer = 0; // Counter for lines after a match
     let mut printed_commit = false; // Tracks if the commit has been printed
-    let mut use_long_separator = false;
 
     diff.print(git2::DiffFormat::Patch, |delta, _, line| {
         let content = String::from_utf8_lossy(line.content());
@@ -33,30 +32,21 @@ pub fn print_commit_content(
                 if !printed_commit {
                     print_commit(&commit_id.to_string());
                     printed_commit = true;
-                    use_long_separator = true;
                 }
 
                 if let Some(path) = delta.new_file().path() {
                     if let Some(line_number) = line.new_lineno() {
-                        let separator =
-                            if use_long_separator { "   " } else { " " };
-
-                        // TODO: Implement a better way print symmetrically multiple lines
-                        if use_long_separator {
-                            use_long_separator = false;
-                        }
-
                         let file_path =
                             format!("{}", path.display()).bold().to_string();
                         let line_number =
                             format!("{}", line_number).bold().red().to_string();
 
                         println!(
-                            "path:{separator}{}:{}:",
+                            "path: {}:{}:",
                             file_path, line_number
                         );
                     } else {
-                        println!("File: {}", path.display());
+                        println!("path: {}", path.display());
                     }
                 }
 
