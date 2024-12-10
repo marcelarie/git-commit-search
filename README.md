@@ -1,10 +1,14 @@
 # git-commit-search
 
-CLI to search Git commit history, with added features.
+CLI to search Git commit history, with added features and improvements over the
+native Git command:
 
 ```bash
 git log -G"<REGEX>" --all -p --stat
 ```
+
+Goes through each commit, checks the changes, and finds lines that match the
+regex. Then it prints all the matches.
 
 ## Features
 
