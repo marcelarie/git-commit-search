@@ -1,3 +1,6 @@
 # git-commit-search
 
-CLI tool with small improvments over `git log -G"<REGEX>" --all -p --stat`.
+CLI tool with small improvements over:
+```bash
+git log -G"<REGEX>" --all -p --stat
+```
