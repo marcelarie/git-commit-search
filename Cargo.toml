@@ -3,6 +3,11 @@ name = "git-commit-search"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "gcs"
+path = "src/main.rs"
+
+
 [dependencies]
 clap = "4.5.23"
 colored = "2.1.0"
