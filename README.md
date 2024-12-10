@@ -69,7 +69,7 @@ This will search for the string "TODO" in all commits of the specified repositor
 
 - [x] Search using a dir path. (-p,--path).
 - [x] Show context lines. (-l,--conlines).
-- [ ] .gitignore arguments (-
+- [x] Ignore `.gitignore` rules via parameter (--no-gitignore)
 
 ## Dependencies
 
