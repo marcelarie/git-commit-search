@@ -63,8 +63,10 @@ pub fn print_commit_content(
                 println!(); // Newline to separate the commit info from the diff
 
                 // Print context lines before the match
-                for buffered_line in &lines_buffer {
-                    println!(" {}", buffered_line);
+                if !lines_buffer.is_empty() && context_lines > 0 {
+                    for buffered_line in &lines_buffer {
+                        println!(" {}", buffered_line);
+                    }
                 }
 
                 // Prints the match
@@ -77,7 +79,7 @@ pub fn print_commit_content(
             }
         } else {
             // Add the current line to the buffer and limit the buffer size
-            if lines_buffer.len() >= context_lines {
+            if !lines_buffer.is_empty() && lines_buffer.len() >= context_lines {
                 lines_buffer.remove(0); // Remove the oldest line to maintain size
             }
 
