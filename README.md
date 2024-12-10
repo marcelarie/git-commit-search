@@ -1,8 +1,6 @@
 # git-commit-search
 
-**`gcs`** is a CLI tool designed to enhance and simplify searching
-through Git commit history, with additional features and improvements over the
-native Git command:
+CLI to search Git commit history, with added features.
 
 ```bash
 git log -G"<REGEX>" --all -p --stat
@@ -11,14 +9,14 @@ git log -G"<REGEX>" --all -p --stat
 ## Features
 
 - Search for specific patterns via regex on all commits and diffs.
-- Display matching context.
+- Display matching content.
 
 ## Installation
 
 Clone the repository and build the tool using `cargo`:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/marcelarie/git-commit-search
 cd git-commit-search
 cargo build --release
 ```
@@ -34,7 +32,7 @@ gcs --regex "<REGEX>" --path /path/to/repo
 ### Examples:
 
 ```bash
-# Search for the text TODO 
+# Search for the text TODO
 gcs -r "TODO" -p ~/my-project
 
 # Search for TODO comments with assignee
