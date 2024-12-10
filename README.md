@@ -30,33 +30,32 @@ cargo build --release
 Run the tool with the desired regex pattern and optional repository path:
 
 ```bash
-gcs --regex "<REGEX>" --path /path/to/repo
+gcs "<REGEX>" --path /path/to/repo
 ```
 
 ### Examples:
 
 ```bash
 # Search for the text TODO
-gcs -r "TODO" -p ~/my-project
+gcs "TODO" -p ~/my-project
 
 # Search for TODO comments with assignee
-gcs -r "TODO\s*\(@\w+\):" -p ~/my-project
+gcs "TODO\s*\(@\w+\):" -p ~/my-project
 
 # Find password or API key assignments
-gcs -r "(?i)(password|api_key)\s*=\s*['\"][^'\"]+['\"]"
+gcs "(?i)(password|api_key)\s*=\s*['\"][^'\"]+['\"]"
 
 # Search for removed test functions
-gcs -r "^-\s*#\[test\]"
+gcs "^-\s*#\[test\]"
 
 # Find version bumps in Cargo.toml
-gcs -r '+version\s*=\s*"\d+\.\d+\.\d+"'
+gcs '+version\s*=\s*"\d+\.\d+\.\d+"'
 ```
 
 This will search for the string "TODO" in all commits of the specified repository.
 
 ## Options
 
-- **`-r, --regex`**: The regex pattern to search for (required).
 - **`-p, --path`**: The path to the repository (optional, defaults to the current directory).
 
 ## Dependencies

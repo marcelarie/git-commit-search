@@ -6,10 +6,9 @@ pub fn parse_args() -> (String, String) {
         .about("Highlights git diffs based on a regex pattern")
         .arg(
             Arg::new("regex")
-                .long("regex")
-                .short('r')
                 .help("The regex pattern to match in the diff")
-                .required(true),
+                .required(true)
+                .index(1),
         )
         .arg(
             Arg::new("path")
@@ -26,4 +25,3 @@ pub fn parse_args() -> (String, String) {
 
     (regex, path)
 }
-
