@@ -26,6 +26,7 @@ pub fn print_commit_content(
     commit_id: Oid,
     context_lines: usize,
     repo_path: &str,
+    no_gitignore: bool,
 ) -> Result<(), git2::Error> {
     let mut lines_buffer = Vec::new();
     let mut post_match_buffer = 0; // Counter for lines after a match
@@ -52,7 +53,7 @@ pub fn print_commit_content(
                     let should_ignore_file =
                         is_ignored(repo_path, &file_path.to_string());
 
-                    if should_ignore_file {
+                    if !no_gitignore && should_ignore_file {
                         return true;
                     }
 

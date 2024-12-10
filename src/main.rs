@@ -32,7 +32,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             None => repo.diff_tree_to_tree(None, Some(&tree), None)?,
         };
 
-        print_commit_content(&diff, &regex, commit_id, context_lines, &path)?;
+        print_commit_content(
+            &diff,
+            &regex,
+            commit_id,
+            context_lines,
+            &path,
+            no_gitignore,
+        )?;
     }
 
     Ok(())
