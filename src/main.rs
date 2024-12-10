@@ -45,8 +45,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-const DARK_GREEN: (u8, u8, u8) = (0, 40, 0);
-const DARK_RED: (u8, u8, u8) = (40, 0, 0);
+const DARK_GREEN: (u8, u8, u8) = (0, 60, 0);
+const DARK_RED: (u8, u8, u8) = (80, 0, 0);
 
 enum ChangeType {
     Addition,
