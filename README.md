@@ -42,9 +42,6 @@ gcs "TODO\s*\(@\w+\):" -p ~/my-project
 # Find password or API key assignments
 gcs "(?i)(password|api_key)\s*=\s*['\"][^'\"]+['\"]"
 
-# Search for removed test functions
-gcs "^-\s*#\[test\]"
-
 # Find version bumps in Cargo.toml
 gcs '+version\s*=\s*"\d+\.\d+\.\d+"'
 ```
