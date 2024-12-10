@@ -55,6 +55,20 @@ This will search for the string "TODO" in all commits of the specified repositor
 - **`-l, --conlines`**: The number of context lines to display on the top and
   bottom of the match (optional, defaults to 1).
 
+## Todo
+
+- [ ] Interactive mode.
+  - [ ] View the whole commit.
+  - [ ] View the whole diff.
+  - [ ] Go to next match
+  - [ ] Go to prev match
+  - [ ] Show file and commit in GitLab or GitHub.
+- [ ] Grab multiple matches and use interactive mode on them.
+- [ ] Search using a file pattern. (e.g. `*.rs`).
+
+- [x] Search using a dir path. (-p,--path).
+- [x] Show context lines. (-l,--conlines).
+
 ## Dependencies
 
 - [rust](https://www.rust-lang.org/)
