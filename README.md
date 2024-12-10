@@ -67,6 +67,9 @@ This will search for the string "TODO" in all commits of the specified repositor
   - [ ] Show file and commit in GitLab or GitHub.
 - [ ] Grab multiple matches and use interactive mode on them.
 - [ ] Search using a file pattern. (e.g. `*.rs`).
+- [ ] Implement
+      [tree-sitter-highlight](https://crates.io/crates/tree-sitter-highlight) crate
+      for diff syntax highlighting
 
 - [x] Search using a dir path. (-p,--path).
 - [x] Show context lines. (-l,--conlines).
