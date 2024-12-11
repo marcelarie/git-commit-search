@@ -32,6 +32,13 @@ pub fn parse_args() -> (String, String, usize, bool) {
             .action(clap::ArgAction::SetTrue)
         )
         .arg(
+            Arg::new("diff-tool")
+            .long("diff-tool")
+            .short('d')
+            .help("External diff tool to use (e.g., delta, colordiff)")
+            .env("DIFF_TOOL")
+        )
+        .arg(
             Arg::new("file-pattern")
             .long("file-pattern")
             .short('f')
