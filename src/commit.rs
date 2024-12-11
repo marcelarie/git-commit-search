@@ -1,15 +1,18 @@
 use colored::*;
-use git2::Commit;
+use git2::{Commit, Repository};
 
 const ORANGE_BACKGROUND: (u8, u8, u8) = (255, 165, 0);
 
 pub fn print_commit(commit: &Commit) {
     let commit_id = commit.id().to_string();
     let (r, g, b) = ORANGE_BACKGROUND;
-    print!("commit: {}\n\n", commit_id.black().bold().on_truecolor(r, g, b));
+    print!(
+        "commit: {}\n\n",
+        commit_id.black().bold().on_truecolor(r, g, b)
+    );
 }
 
-// Simple of print commit with metadata 
+// Simple of print commit with metadata
 // pub fn print_commit(commit: &Commit) {
 //     println!("commit {}", commit.id());
 //     if let Some(author) = commit.author().name() {
@@ -22,4 +25,14 @@ pub fn print_commit(commit: &Commit) {
 //         println!("\n    {}\n", message.trim_end());
 //     }
 // }
-//
+
+/// Walk through all commits in the repository
+pub fn walk_commits(repo: &Repository) -> Result<Vec<Commit>, git2::Error> {
+    let mut revwalk = repo.revwalk()?;
+    revwalk.push_head()?;
+
+    revwalk
+        .filter_map(|oid| oid.ok())
+        .map(|oid| repo.find_commit(oid))
+        .collect()
+}
