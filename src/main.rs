@@ -1,34 +1,28 @@
 mod args;
+mod commit;
+mod git;
 
 use args::parse_args;
+use commit::print_commit;
+use git::{diff_matches_regex, generate_patch, get_commit_diff, walk_commits};
 use git2::Repository;
-use regex::Regex;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let (regex, path, context_lines, no_gitignore, diff_tool) = parse_args();
-
-    let regex = Regex::new(&regex)?;
+    let (regex_pattern, path, _context_lines, _no_gitignore, _diff_tool) =
+        parse_args();
+    let regex = regex::Regex::new(&regex_pattern)?;
     let repo = Repository::open(&path)?;
 
-    // Walk through commits
-    let mut revwalk = repo.revwalk()?;
-    revwalk.push_head()?;
+    let commits = walk_commits(&repo)?;
 
-    for oid in revwalk {
-        let oid = oid?;
-        let commit = repo.find_commit(oid)?;
-        let commit_id = commit.id();
-        let tree = commit.tree()?;
+    for commit in commits {
+        let diff = get_commit_diff(&repo, &commit)?;
 
-        let diff = match commit.parents().next() {
-            Some(parent) => {
-                let parent_tree = parent.tree()?;
-                repo.diff_tree_to_tree(Some(&parent_tree), Some(&tree), None)?
-            }
-            None => repo.diff_tree_to_tree(None, Some(&tree), None)?,
-        };
-
-        // rest of the code
+        if diff_matches_regex(&diff, &regex).0 {
+            print_commit(&commit);
+            let patch = generate_patch(&diff)?;
+            println!("{}", patch);
+        }
     }
 
     Ok(())
