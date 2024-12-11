@@ -32,6 +32,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 use_diff_tool(tool, &patch)?;
             } else {
                 // Minimal mode
+                print_commit(&commit);
                 for (current_file, line_number, line) in matches {
                     let line_number = line_number.unwrap_or(0);
                     let line_number_str = if line_number > 0 {
@@ -39,7 +40,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     } else {
                         "-".to_string()
                     };
-                    print_commit(&commit);
                     print_minimal_match(&current_file, &line_number_str, &line);
                 }
                 // Full patch mode
