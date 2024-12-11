@@ -1,15 +1,11 @@
 mod args;
-mod commit;
-mod diff;
-mod utils;
 
 use args::parse_args;
-use diff::show::print_commit_content;
 use git2::Repository;
 use regex::Regex;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let (regex, path, context_lines, no_gitignore) = parse_args();
+    let (regex, path, context_lines, no_gitignore, diff_tool) = parse_args();
 
     let regex = Regex::new(&regex)?;
     let repo = Repository::open(&path)?;
@@ -32,14 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             None => repo.diff_tree_to_tree(None, Some(&tree), None)?,
         };
 
-        print_commit_content(
-            &diff,
-            &regex,
-            commit_id,
-            context_lines,
-            &path,
-            no_gitignore,
-        )?;
+        // rest of the code
     }
 
     Ok(())
