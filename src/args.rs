@@ -1,6 +1,6 @@
 use clap::{Arg, Command};
 
-pub fn parse_args() -> (String, String, usize, bool, String) {
+pub fn parse_args() -> (String, String, usize, bool, Option<String>) {
     let matches = Command::new("git-commit-search")
         .version("1.0")
         .about("Search and highlight changes across the entire Git commit history using regex patterns.")
@@ -36,7 +36,6 @@ pub fn parse_args() -> (String, String, usize, bool, String) {
             .long("diff-tool")
             .short('d')
             .help("External diff tool to use (e.g., delta, colordiff)")
-            .default_value("diff")
             .env("DIFF_TOOL")
         )
         .arg(
@@ -57,7 +56,7 @@ pub fn parse_args() -> (String, String, usize, bool, String) {
     let path = matches.get_one::<String>("path").unwrap().to_string();
     let context_lines = *matches.get_one::<usize>("context-lines").unwrap();
     let no_gitignore = matches.get_flag("no-gitignore");
-    let diff_tool = matches.get_one::<String>("diff-tool").unwrap().to_string();
+    let diff_tool = matches.get_one::<String>("diff-tool").cloned();
 
     (regex, path, context_lines, no_gitignore, diff_tool)
 }
