@@ -16,14 +16,21 @@ pub fn matches_diff(
             .trim_end()
             .to_string();
 
+        let is_hunk_header =
+            line.new_lineno().is_none() && line.old_lineno().is_none();
+
+        // Skip hunk headers
+        if is_hunk_header {
+            return true;
+        }
+
         if regex.is_match(&content) {
             found_match = true;
 
             if let Some(file_path) = delta.new_file().path() {
                 let file_name = file_path.to_string_lossy().to_string();
-                let line_number = line
-                    .new_lineno()
-                    .or_else(|| line.old_lineno());
+                let line_number =
+                    line.new_lineno().or_else(|| line.old_lineno());
 
                 matches.push((
                     file_name,
