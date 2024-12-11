@@ -4,7 +4,7 @@ mod diff;
 mod utils;
 
 use args::parse_args;
-use diff::print_commit_content;
+use diff::show::print_commit_content;
 use git2::Repository;
 use regex::Regex;
 

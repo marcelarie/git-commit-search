@@ -32,6 +32,7 @@ pub fn print_commit_content(
     let mut post_match_buffer = 0; // Counter for lines after a match
     let mut printed_commit = false; // Tracks if the commit has been printed
 
+
     diff.print(git2::DiffFormat::Patch, |delta, _, line| {
         let content = String::from_utf8_lossy(line.content());
 
