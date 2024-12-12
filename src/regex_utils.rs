@@ -3,10 +3,11 @@ use regex::Regex;
 
 #[derive(Debug, Clone)]
 pub struct RegexMatch {
-    pub matched_text: String,
-    pub file_name:    String,
-    pub line_number:  Option<u32>,
-    pub line_content: String,
+    pub matched_text:     String,
+    pub file_name:        String,
+    pub line_number:      Option<u32>,
+    pub line_content:     String,
+    pub line_change_type: char,
 }
 
 /// Check if a commit diff matches the regex.
@@ -43,6 +44,7 @@ pub fn matches_diff(diff: &Diff, regex: &Regex) -> (bool, Vec<RegexMatch>) {
                     file_name,
                     line_number,
                     line_content: content.trim_end().to_string(),
+                    line_change_type: line.origin(),
                 });
             }
         }

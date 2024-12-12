@@ -11,6 +11,15 @@ use git2::Repository;
 use print::{print_commit, print_minimal_match_result};
 use regex_utils::matches_diff;
 
+// diff.print(git2::DiffFormat::Patch, |delta, _, line| {
+//     let content = String::from_utf8_lossy(line.content());
+//
+//  if let Some(change_type) = match line.origin() {
+//     '+' => Some(ChangeType::Addition),
+//     '-' => Some(ChangeType::Deletion),
+//     _ => None,
+// } {
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (regex_pattern, path, _context_lines, _no_gitignore, diff_tool) =
         parse_args();
@@ -41,6 +50,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
+    // Show diff mode
     if let Some(ref tool) = diff_tool {
         let all_patches = patches.join("\n");
         use_diff_tool(tool, &all_patches)?;
