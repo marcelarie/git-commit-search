@@ -11,3 +11,15 @@ pub fn open_repository(path: &Path) -> Result<Repository> {
         )
     })
 }
+
+pub fn find_commit_by_oid(
+    repo: &Repository,
+    oid: git2::Oid,
+) -> Result<git2::Commit> {
+    repo.find_commit(oid).with_context(|| {
+        format!(
+            "Could not find commit with OID '{}'",
+            oid.to_string().bold().yellow()
+        )
+    })
+}

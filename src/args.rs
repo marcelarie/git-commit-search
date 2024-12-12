@@ -61,7 +61,7 @@ pub fn parse_args() -> ArgsResult {
             Arg::new("show-metadata")
             .long("show-metadata")
             .short('m')
-            .help("Show commit metadata (author, email, message).")
+            .help("Show commits metadata (e.g., author, email, message).")
             .action(clap::ArgAction::SetTrue)
         )
         .arg(

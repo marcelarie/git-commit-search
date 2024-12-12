@@ -25,13 +25,12 @@ fn run() -> Result<(), Box<dyn Error>> {
     let regex = create_regex(regex_pattern)?;
     let repo_path = Path::new(&path);
     let repo = open_repository(repo_path)?;
-
     let commits = walk_commits(&repo)?;
 
     if diff_tool.is_some() {
-        process_with_diff_tool(commits, &repo, &regex, diff_tool)?;
+        process_with_diff_tool(commits, repo_path, &regex, diff_tool)?;
     } else {
-        process_minimal_mode(commits, &repo, &regex, repo_path)?;
+        process_minimal_mode(commits, repo_path, &regex)?;
     }
 
     Ok(())
