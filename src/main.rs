@@ -21,9 +21,8 @@ fn run() -> Result<(), Box<dyn Error>> {
     let repo = open_repository(repo_path)?;
 
     let commits = walk_commits(&repo)?;
-    let has_diff_tool = diff_tool.is_some();
 
-    if has_diff_tool {
+    if diff_tool.is_some() {
         process_with_diff_tool(commits, &repo, &regex, diff_tool)?;
     } else {
         process_minimal_mode(commits, &repo, &regex, repo_path)?;
