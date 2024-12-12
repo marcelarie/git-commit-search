@@ -1,6 +1,9 @@
+use std::path::Path;
+
 use colored::*;
 use git2::Commit;
 
+use crate::env::{current_dir, var};
 use crate::regex_utils::RegexMatch;
 
 pub fn print_commit(commit: &Commit) {
@@ -10,7 +13,8 @@ pub fn print_commit(commit: &Commit) {
 
 fn print_minimal_line(
     match_text: &str,
-    file_path: &str,
+    path: &str,
+    file_name: &str,
     line_number: &str,
     line_content: &str,
     change_type: &char,
@@ -24,22 +28,37 @@ fn print_minimal_line(
         _ => "",
     };
 
+    let file = format!("{}{}", path, file_name); 
+
     println!(
         "{}:{}:{} {}",
-        file_path.truecolor(204, 204, 204), // Light grey
+        file.truecolor(204, 204, 204), // Light grey
         line_number.truecolor(102, 153, 204), // Azure blue
         change_type,
         line_content.trim_end()
     );
 }
 
-pub fn print_minimal_match_result(match_result: RegexMatch) {
+pub fn print_minimal_match_result(match_result: RegexMatch, path: &Path) {
     let current_file = &match_result.file_name;
     let line_number = match_result.line_number;
 
     let line = &match_result.line_content;
     let match_text = &match_result.matched_text;
     let change_type = &match_result.line_change_type;
+
+    // TODO: Refactor this code for path
+    let simplified_path = if path.to_str().unwrap() == "." {
+        "".to_string()
+    } else {
+        let absolute_path = path.canonicalize().unwrap();
+        let current_dir = current_dir().unwrap();
+        let _is_external_repo = absolute_path != current_dir;
+        absolute_path
+            .display()
+            .to_string()
+            .replace(&var("HOME").unwrap(), "~") + "/"
+    };
 
     let line_number = line_number.unwrap_or(0);
     let line_number_str = if line_number > 0 {
@@ -49,6 +68,7 @@ pub fn print_minimal_match_result(match_result: RegexMatch) {
     };
     print_minimal_line(
         match_text,
+        &simplified_path,
         current_file,
         &line_number_str,
         line,

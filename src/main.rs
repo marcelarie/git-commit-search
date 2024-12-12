@@ -4,6 +4,8 @@ mod git;
 mod print;
 mod regex_utils;
 
+use std::{env, path::Path};
+
 use args::parse_args;
 use commit::walk_commits;
 use git::{generate_patch, get_commit_diff, use_diff_tool};
@@ -11,20 +13,14 @@ use git2::Repository;
 use print::{print_commit, print_minimal_match_result};
 use regex_utils::matches_diff;
 
-// diff.print(git2::DiffFormat::Patch, |delta, _, line| {
-//     let content = String::from_utf8_lossy(line.content());
-//
-//  if let Some(change_type) = match line.origin() {
-//     '+' => Some(ChangeType::Addition),
-//     '-' => Some(ChangeType::Deletion),
-//     _ => None,
-// } {
-
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (regex_pattern, path, _context_lines, _no_gitignore, diff_tool) =
         parse_args();
+
     let regex = regex::Regex::new(&regex_pattern)?;
-    let repo = Repository::open(&path)?;
+    let path = Path::new(&path);
+    let repo = Repository::open(path)?;
+
     let mut patches = Vec::new();
     let has_diff_tool = diff_tool.is_some();
 
@@ -44,7 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             if has_matches {
                 print_commit(&commit);
                 for match_result in matches {
-                    print_minimal_match_result(match_result);
+                    print_minimal_match_result(match_result, path);
                 }
             }
         }
