@@ -6,9 +6,21 @@ use git2::Commit;
 use crate::env::{current_dir, var};
 use crate::regex_utils::RegexMatch;
 
-pub fn print_commit(commit: &Commit) {
+pub fn print_commit(commit: &Commit, with_metadata: bool) {
     let commit_id = commit.id().to_string();
     print!("\ncommit: {}\n", commit_id.truecolor(255, 165, 0)); // Bright orange
+
+    if with_metadata {
+        if let Some(author) = commit.author().name() {
+            println!("Author: {}", author);
+        }
+        if let Some(email) = commit.author().email() {
+            println!("Email: {}", email);
+        }
+        if let Some(message) = commit.message() {
+            println!("\n    {}\n", message.trim_end());
+        }
+    }
 }
 
 fn print_minimal_line(
@@ -28,7 +40,7 @@ fn print_minimal_line(
         _ => "",
     };
 
-    let file = format!("{}{}", path, file_name); 
+    let file = format!("{}{}", path, file_name);
 
     println!(
         "{}:{}:{} {}",
@@ -57,7 +69,8 @@ pub fn print_minimal_match_result(match_result: RegexMatch, path: &Path) {
         absolute_path
             .display()
             .to_string()
-            .replace(&var("HOME").unwrap(), "~") + "/"
+            .replace(&var("HOME").unwrap(), "~")
+            + "/"
     };
 
     let line_number = line_number.unwrap_or(0);

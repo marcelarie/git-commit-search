@@ -1,11 +1,30 @@
+use std::sync::OnceLock;
+
 use clap::{Arg, Command};
 
-pub fn parse_args() -> (String, String, usize, bool, Option<String>) {
+#[allow(warnings)]
+pub struct ArgsResult {
+    pub regex_pattern: String,
+    pub path:          String,
+    pub context_lines: usize,
+    pub no_gitignore:  bool,
+    pub diff_tool:     Option<String>,
+    pub show_metadata: bool,
+    // pub file_pattern:  Option<String>,
+    // pub interactive:   bool,
+}
+
+pub static SHOW_METADATA_GLOBAL: OnceLock<bool> = OnceLock::new();
+
+pub fn has_show_metadata_mode() -> bool {
+    *SHOW_METADATA_GLOBAL.get().unwrap_or(&false)
+}
+
+pub fn parse_args() -> ArgsResult {
     let matches = Command::new("git-commit-search")
         .version("1.0")
         .about("Search and highlight changes across the entire Git commit history using regex patterns.")
-        .arg(
-            Arg::new("regex")
+        .arg( Arg::new("regex")
                 .help("The regex pattern to match in the diff")
                 .required(true)
                 .index(1),
@@ -39,6 +58,13 @@ pub fn parse_args() -> (String, String, usize, bool, Option<String>) {
             .env("DIFF_TOOL")
         )
         .arg(
+            Arg::new("show-metadata")
+            .long("show-metadata")
+            .short('m')
+            .help("Show commit metadata (author, email, message).")
+            .action(clap::ArgAction::SetTrue)
+        )
+        .arg(
             Arg::new("file-pattern")
             .long("file-pattern")
             .short('f')
@@ -52,11 +78,21 @@ pub fn parse_args() -> (String, String, usize, bool, Option<String>) {
         )
         .get_matches();
 
-    let regex = matches.get_one::<String>("regex").unwrap().to_string();
+    let regex_pattern = matches.get_one::<String>("regex").unwrap().to_string();
     let path = matches.get_one::<String>("path").unwrap().to_string();
     let context_lines = *matches.get_one::<usize>("context-lines").unwrap();
-    let no_gitignore = matches.get_flag("no-gitignore");
     let diff_tool = matches.get_one::<String>("diff-tool").cloned();
+    let no_gitignore = matches.get_flag("no-gitignore");
+    let show_metadata = matches.get_flag("show-metadata");
 
-    (regex, path, context_lines, no_gitignore, diff_tool)
+    SHOW_METADATA_GLOBAL.get_or_init(|| show_metadata);
+
+    ArgsResult {
+        regex_pattern,
+        path,
+        context_lines,
+        no_gitignore,
+        diff_tool,
+        show_metadata,
+    }
 }

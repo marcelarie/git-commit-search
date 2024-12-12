@@ -8,13 +8,19 @@ use colored::*;
 use regex_utils::create_regex;
 use std::{env, error::Error, path::Path};
 
-use args::parse_args;
+use args::{parse_args, ArgsResult};
 use commit::{process_minimal_mode, process_with_diff_tool, walk_commits};
 use git::open_repository;
 
 fn run() -> Result<(), Box<dyn Error>> {
-    let (regex_pattern, path, _context_lines, _no_gitignore, diff_tool) =
-        parse_args();
+    let ArgsResult {
+        regex_pattern,
+        path,
+        context_lines: _,
+        no_gitignore: _,
+        diff_tool,
+        show_metadata: _,
+    } = parse_args();
 
     let regex = create_regex(regex_pattern)?;
     let repo_path = Path::new(&path);

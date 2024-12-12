@@ -2,23 +2,10 @@ use git2::{Commit, Repository};
 use regex::Regex;
 use std::path::Path;
 
+use crate::args::has_show_metadata_mode;
 use crate::git::{generate_patch, get_commit_diff, use_diff_tool};
 use crate::print::{print_commit, print_minimal_match_result};
 use crate::regex_utils::matches_diff;
-
-// Simple of print commit with metadata
-// pub fn print_commit(commit: &Commit) {
-//     println!("commit {}", commit.id());
-//     if let Some(author) = commit.author().name() {
-//         println!("Author: {}", author);
-//     }
-//     if let Some(email) = commit.author().email() {
-//         println!("Email: {}", email);
-//     }
-//     if let Some(message) = commit.message() {
-//         println!("\n    {}\n", message.trim_end());
-//     }
-// }
 
 /// Walk through all commits in the repository
 pub fn walk_commits(repo: &Repository) -> Result<Vec<Commit>, git2::Error> {
@@ -67,7 +54,8 @@ pub fn process_minimal_mode(
         let (has_matches, matches) = matches_diff(&diff, regex);
 
         if has_matches {
-            print_commit(&commit);
+            let show_metadata = has_show_metadata_mode();
+            print_commit(&commit, show_metadata);
             for match_result in matches {
                 print_minimal_match_result(match_result, repo_path);
             }
