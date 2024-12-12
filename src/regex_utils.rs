@@ -1,12 +1,17 @@
 use git2::{Diff, DiffFormat};
 use regex::Regex;
 
+#[derive(Debug, Clone)]
+pub struct RegexMatch {
+    pub matched_text: String,
+    pub file_name:    String,
+    pub line_number:  Option<u32>,
+    pub line_content: String,
+}
+
 /// Check if a commit diff matches the regex.
 /// Returns a boolean indicating whether a match was found and the matching lines.
-pub fn matches_diff(
-    diff: &Diff,
-    regex: &Regex,
-) -> (bool, Vec<(String, Option<u32>, String)>) {
+pub fn matches_diff(diff: &Diff, regex: &Regex) -> (bool, Vec<RegexMatch>) {
     let mut found_match = false;
     let mut matches = Vec::new();
 
@@ -24,7 +29,8 @@ pub fn matches_diff(
             return true;
         }
 
-        if regex.is_match(&content) {
+        if let Some(match_result) = regex.find(&content) {
+            let match_text = match_result.as_str().to_string();
             found_match = true;
 
             if let Some(file_path) = delta.new_file().path() {
@@ -32,11 +38,12 @@ pub fn matches_diff(
                 let line_number =
                     line.new_lineno().or_else(|| line.old_lineno());
 
-                matches.push((
+                matches.push(RegexMatch {
+                    matched_text: match_text,
                     file_name,
                     line_number,
-                    content.trim_end().to_string(),
-                ));
+                    line_content: content.trim_end().to_string(),
+                });
             }
         }
         true
