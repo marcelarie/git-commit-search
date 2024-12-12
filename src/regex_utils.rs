@@ -1,3 +1,4 @@
+use anyhow::{Context, Result};
 use git2::{Diff, DiffFormat};
 use regex::Regex;
 
@@ -53,4 +54,10 @@ pub fn matches_diff(diff: &Diff, regex: &Regex) -> (bool, Vec<RegexMatch>) {
     .unwrap_or_default();
 
     (found_match, matches)
+}
+
+pub fn create_regex(pattern: String) -> Result<Regex> {
+    Regex::new(&pattern).with_context(|| {
+        format!("Could not create regex from pattern: {}", pattern)
+    })
 }

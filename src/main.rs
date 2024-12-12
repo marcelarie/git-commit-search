@@ -4,53 +4,44 @@ mod git;
 mod print;
 mod regex_utils;
 
-use std::{env, path::Path};
+use colored::*;
+use regex_utils::create_regex;
+use std::{env, error::Error, path::Path};
 
 use args::parse_args;
-use commit::walk_commits;
-use git::{generate_patch, get_commit_diff, open_repository, use_diff_tool};
-use print::{print_commit, print_minimal_match_result};
-use regex_utils::matches_diff;
+use commit::{process_minimal_mode, process_with_diff_tool, walk_commits};
+use git::open_repository;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn run() -> Result<(), Box<dyn Error>> {
     let (regex_pattern, path, _context_lines, _no_gitignore, diff_tool) =
         parse_args();
 
-    let regex = regex::Regex::new(&regex_pattern)?;
-    let path = Path::new(&path);
-
-    let repo = open_repository(path)?;
-
-    let mut patches = Vec::new();
-    let has_diff_tool = diff_tool.is_some();
+    let regex = create_regex(regex_pattern)?;
+    let repo_path = Path::new(&path);
+    let repo = open_repository(repo_path)?;
 
     let commits = walk_commits(&repo)?;
+    let has_diff_tool = diff_tool.is_some();
 
-    for commit in commits {
-        let diff = get_commit_diff(&repo, &commit)?;
-        let (has_matches, matches) = matches_diff(&diff, &regex);
-
-        if has_diff_tool {
-            if has_matches {
-                let patch = generate_patch(&commit, &diff)?;
-                patches.push(patch.clone());
-            }
-        } else {
-            // Minimal mode
-            if has_matches {
-                print_commit(&commit);
-                for match_result in matches {
-                    print_minimal_match_result(match_result, path);
-                }
-            }
-        }
-    }
-
-    // Show diff mode
-    if let Some(ref tool) = diff_tool {
-        let all_patches = patches.join("\n");
-        use_diff_tool(tool, &all_patches)?;
+    if has_diff_tool {
+        process_with_diff_tool(commits, &repo, &regex, diff_tool)?;
+    } else {
+        process_minimal_mode(commits, &repo, &regex, repo_path)?;
     }
 
     Ok(())
+}
+
+fn main() {
+    if let Err(error) = run() {
+        eprintln!("{}\n{}\n", "Error:".red().bold(), error);
+
+        // Shown in debug mode
+        // if let Some(cause) = error.source() {
+        //     eprintln!("{}\n{}\n", "Caused by:".bold().blue(), cause);
+        // }
+
+        println!("Please use --help for more information.");
+        std::process::exit(1);
+    }
 }
