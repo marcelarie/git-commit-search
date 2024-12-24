@@ -58,7 +58,6 @@ This will search for the string "TODO" in all commits of the specified repositor
 
 ## Todo
 
-- [ ] Add flag to filter by additions and deletions
 - [ ] Improve performance (with parallel processing and thread pools?).
   - `gcs 'fn \S+\(.*\)' -m` on the linux repo: 62m43.462s on minimal mode without changes
 - [ ] Interactive mode.
@@ -74,9 +73,10 @@ This will search for the string "TODO" in all commits of the specified repositor
       [tree-sitter-highlight](https://crates.io/crates/tree-sitter-highlight) crate
       for diff syntax highlighting
 
-- [x] Search using a dir path. (-p,--path).
-- [x] Show context lines. (-l,--conlines).
 - [x] Ignore `.gitignore` rules via parameter (--no-gitignore)
+- [x] Search using a dir path. (-p,--path).
+- [ ] Add flag to filter by additions and deletions
+- [ ] Show context lines. (-l,--conlines).
 
 ## Dependencies
 
