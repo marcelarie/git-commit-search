@@ -58,6 +58,7 @@ This will search for the string "TODO" in all commits of the specified repositor
 
 ## Todo
 
+- [ ] Add flag to filter by additions and deletions
 - [ ] Improve performance (with parallel processing and thread pools?).
   - `gcs 'fn \S+\(.*\)' -m` on the linux repo: 62m43.462s on minimal mode without changes
 - [ ] Interactive mode.
