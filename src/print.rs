@@ -66,6 +66,7 @@ pub fn print_minimal_match_result(match_result: RegexMatch, path: &Path) {
         let absolute_path = path.canonicalize().unwrap();
         let current_dir = current_dir().unwrap();
         let _is_external_repo = absolute_path != current_dir;
+
         absolute_path
             .display()
             .to_string()

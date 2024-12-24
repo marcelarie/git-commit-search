@@ -18,6 +18,7 @@ pub fn walk_commits(repo: &Repository) -> Result<Vec<Commit>, git2::Error> {
         .collect()
 }
 
+// TODO: Unify commit printing between diff_tool and minimal modes
 pub fn process_with_diff_tool(
     commits: Vec<Commit>,
     repo: &Repository,

@@ -2,6 +2,11 @@ use anyhow::{Context, Result};
 use git2::{Diff, DiffFormat};
 use regex::Regex;
 
+use crate::{
+    args::{get_repo_path, has_no_gitignore_mode},
+    git::is_file_ignored,
+};
+
 #[derive(Debug, Clone)]
 pub struct RegexMatch {
     pub matched_text:     String,
@@ -16,6 +21,7 @@ pub struct RegexMatch {
 pub fn matches_diff(diff: &Diff, regex: &Regex) -> (bool, Vec<RegexMatch>) {
     let mut found_match = false;
     let mut matches = Vec::new();
+    let repo_path = get_repo_path();
 
     diff.print(DiffFormat::Patch, |delta, _hunk, line| {
         let content = std::str::from_utf8(line.content())
@@ -33,10 +39,20 @@ pub fn matches_diff(diff: &Diff, regex: &Regex) -> (bool, Vec<RegexMatch>) {
 
         if let Some(match_result) = regex.find(&content) {
             let match_text = match_result.as_str().to_string();
-            found_match = true;
 
             if let Some(file_path) = delta.new_file().path() {
                 let file_name = file_path.to_string_lossy().to_string();
+
+                if !has_no_gitignore_mode() {
+                    let is_ignored = is_file_ignored(&repo_path, &file_name);
+                    if is_ignored {
+                        return true;
+                    }
+                }
+
+                // Mark as found only after confirming that the file is not ignored
+                found_match = true;
+
                 let line_number =
                     line.new_lineno().or_else(|| line.old_lineno());
 
