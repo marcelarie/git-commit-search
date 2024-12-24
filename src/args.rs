@@ -16,6 +16,7 @@ pub struct ArgsResult {
 
 pub static SHOW_METADATA_GLOBAL: OnceLock<bool> = OnceLock::new();
 pub static REPO_PATH_GLOBAL: OnceLock<String> = OnceLock::new();
+pub static NO_GITIGNORE_GLOBAL: OnceLock<bool> = OnceLock::new();
 
 pub fn has_show_metadata_mode() -> bool {
     *SHOW_METADATA_GLOBAL.get().unwrap_or(&false)
@@ -23,6 +24,10 @@ pub fn has_show_metadata_mode() -> bool {
 
 pub fn get_repo_path() -> String {
     REPO_PATH_GLOBAL.get().unwrap_or(&String::new()).to_string()
+}
+
+pub fn has_no_gitignore_mode() -> bool {
+    *NO_GITIGNORE_GLOBAL.get().unwrap_or(&false)
 }
 
 pub fn parse_args() -> ArgsResult {
@@ -92,6 +97,7 @@ pub fn parse_args() -> ArgsResult {
 
     SHOW_METADATA_GLOBAL.get_or_init(|| show_metadata);
     REPO_PATH_GLOBAL.get_or_init(|| path.clone());
+    NO_GITIGNORE_GLOBAL.get_or_init(|| no_gitignore);
 
     ArgsResult {
         regex_pattern,
