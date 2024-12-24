@@ -15,9 +15,14 @@ pub struct ArgsResult {
 }
 
 pub static SHOW_METADATA_GLOBAL: OnceLock<bool> = OnceLock::new();
+pub static REPO_PATH_GLOBAL: OnceLock<String> = OnceLock::new();
 
 pub fn has_show_metadata_mode() -> bool {
     *SHOW_METADATA_GLOBAL.get().unwrap_or(&false)
+}
+
+pub fn get_repo_path() -> String {
+    REPO_PATH_GLOBAL.get().unwrap_or(&String::new()).to_string()
 }
 
 pub fn parse_args() -> ArgsResult {
@@ -86,6 +91,7 @@ pub fn parse_args() -> ArgsResult {
     let show_metadata = matches.get_flag("show-metadata");
 
     SHOW_METADATA_GLOBAL.get_or_init(|| show_metadata);
+    REPO_PATH_GLOBAL.get_or_init(|| path.clone());
 
     ArgsResult {
         regex_pattern,
