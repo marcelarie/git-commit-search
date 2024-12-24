@@ -17,41 +17,44 @@ pub fn open_repository(path: &Path) -> Result<Repository> {
     })
 }
 
-pub struct GitignoreMatcher {
-    gitignore: Option<Gitignore>,
+const GCS_IGNORE_FILE_PATH: &str = ".gcsignore";
+
+pub struct GcsIgnoreMatcher {
+    gcsignore: Option<Gitignore>,
 }
 
-impl GitignoreMatcher {
-    /// Initialize the matcher, loading all `.gitignore` files in the repository.
-    pub fn new(repo_path: &Path, no_gitignore: bool) -> Result<Self> {
-        if no_gitignore {
-            return Ok(Self { gitignore: None });
+impl GcsIgnoreMatcher {
+    /// Initialize the matcher, loading all `.gcsignore` files in the repository.
+    pub fn new(repo_path: &Path, no_ignore: bool) -> Result<Self> {
+        if no_ignore {
+            return Ok(Self { gcsignore: None });
         }
 
         let repo_path = Path::new(repo_path);
         let mut builder = GitignoreBuilder::new(repo_path);
 
-        let gitignore_files =
-            get_matching_files(repo_path, r"(?i)\.gitignore$")?;
+        let regex_pattern = format!(r"(?i)\{}$", GCS_IGNORE_FILE_PATH);
 
-        for gitignore_file in gitignore_files {
-            builder.add(gitignore_file);
+        let gcsignore_files = get_matching_files(repo_path, &regex_pattern)?;
+
+        for gcsignore_file in gcsignore_files {
+            builder.add(gcsignore_file);
         }
 
-        let gitignore = builder.build().expect("Failed to build gitignore");
+        let gcsignore = builder.build().expect("Failed to build gcignore files");
 
         Ok(Self {
-            gitignore: Some(gitignore),
+            gcsignore: Some(gcsignore),
         })
     }
 
-    /// Check if a file is ignored by any `.gitignore` files in the repository.
+    /// Check if a file is ignored by any `.gcsignore` files in the repository.
     pub fn is_file_ignored(&self, file_path: &str) -> bool {
-        if let Some(gitignore) = &self.gitignore {
+        if let Some(gcsignore) = &self.gcsignore {
             let file_path = Path::new(file_path);
             let is_dir = file_path.is_dir();
 
-            gitignore
+            gcsignore
                 .matched_path_or_any_parents(file_path, is_dir)
                 .is_ignore()
         } else {

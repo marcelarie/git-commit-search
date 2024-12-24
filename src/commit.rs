@@ -3,7 +3,7 @@ use regex::Regex;
 use std::path::Path;
 
 use crate::args::has_show_metadata_mode;
-use crate::git::repo::GitignoreMatcher;
+use crate::git::repo::GcsIgnoreMatcher;
 use crate::git::{generate_patch, get_commit_diff, use_diff_tool};
 use crate::print::{print_commit, print_minimal_match_result};
 use crate::regex_utils::matches_diff;
@@ -25,14 +25,14 @@ pub fn process_with_diff_tool(
     repo: &Repository,
     regex: &Regex,
     diff_tool: Option<String>,
-    gitignore_matcher: GitignoreMatcher,
+    gcs_ignore_matcher: GcsIgnoreMatcher,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut patches = Vec::new();
 
     for commit in commits {
         let diff = get_commit_diff(repo, &commit)?;
 
-        if let (true, _) = matches_diff(&diff, regex, &gitignore_matcher) {
+        if let (true, _) = matches_diff(&diff, regex, &gcs_ignore_matcher) {
             let patch = generate_patch(&commit, &diff)?;
             patches.push(patch);
         }
@@ -51,12 +51,12 @@ pub fn process_minimal_mode(
     repo: &Repository,
     regex: &Regex,
     repo_path: &Path,
-    gitignore_matcher: GitignoreMatcher,
+    gcs_ignore_matcher: GcsIgnoreMatcher,
 ) -> Result<(), Box<dyn std::error::Error>> {
     for commit in commits {
         let diff = get_commit_diff(repo, &commit)?;
         let (has_matches, matches) =
-            matches_diff(&diff, regex, &gitignore_matcher);
+            matches_diff(&diff, regex, &gcs_ignore_matcher);
 
         if has_matches {
             let show_metadata = has_show_metadata_mode();

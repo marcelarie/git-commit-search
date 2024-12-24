@@ -9,7 +9,8 @@ regex. Then it prints all the matches.
 ## Features
 
 - Search for specific patterns via regex on all commits and diffs.
-- Respects gitignore rules by default.
+- Ignore file (`.gcsignore`) to exclude files or directories from the search,
+  works like a `.gitignore` file but for the search.
 - Display matching content.
 
 ## Installation
@@ -48,18 +49,45 @@ gcs '+version\s*=\s*"\d+\.\d+\.\d+"'
 
 This will search for the string "TODO" in all commits of the specified repository.
 
+## `.gcsignore` file
+
+The `.gcsignore` file allows you to define patterns for files or directories to
+exclude during your searches. This file provides developers with the flexibility
+to ignore noisy or irrelevant files, even if they exist in past commit diffs.
+
+To use .gcsignore, create a file named .gcsignore in the root of your repository
+and define the patterns you wish to exclude. These patterns work in the same way
+as `.gitignore` patterns and can include file names, directory names, or
+wildcard expressions.
+
+For example:
+```gitignore
+# Ignore all markdown files
+*.md
+
+# Ignore a specific directory
+temp/
+```
+
+When `.gcsignore` is present, the CLI will respect these patterns and exclude
+matching files or directories from the search.
+
 ## Options
 
 - **`-p, --path`**: The path to the repository (optional, defaults to the
   current directory).
 - **`-l, --conlines`**: The number of context lines to display on the top and
   bottom of the match (optional, defaults to 1).
-- **`--no-gitignore`**: Ignore `.gitignore` rules.
+- **`--no-ignore`**: Ignore `.gcsignore` rules.
 
 ## Todo
 
-- [ ] Improve performance (with parallel processing and thread pools?).
-  - `gcs 'fn \S+\(.*\)' -m` on the linux repo: 62m43.462s on minimal mode without changes
+- [ ] Improve performance
+      gcs 'fn \S+\(.\*\)' -m` on the linux repo: 62m43.462s on minimal mode without changes
+  - [ ] Regex optimization
+  - [ ] Implement parallel processing and thread pools
+  - [ ] Incremental updates (cache)
+
 - [ ] Interactive mode.
   - [ ] Real time regex search.
   - [ ] View the whole commit.
@@ -73,7 +101,7 @@ This will search for the string "TODO" in all commits of the specified repositor
       [tree-sitter-highlight](https://crates.io/crates/tree-sitter-highlight) crate
       for diff syntax highlighting
 
-- [x] Ignore `.gitignore` rules via parameter (--no-gitignore)
+- [x] Ignore `.gcsignore` rules via parameter (--no-ignore)
 - [x] Search using a dir path. (-p,--path).
 - [ ] Add flag to filter by additions and deletions
 - [ ] Show context lines. (-l,--conlines).

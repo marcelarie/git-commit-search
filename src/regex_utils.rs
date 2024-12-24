@@ -2,7 +2,7 @@ use anyhow::{Context, Result};
 use git2::{Diff, DiffFormat};
 use regex::Regex;
 
-use crate::{args::has_no_gitignore_mode, git::repo::GitignoreMatcher};
+use crate::{args::has_no_ignore, git::repo::GcsIgnoreMatcher};
 
 #[derive(Debug, Clone)]
 pub struct RegexMatch {
@@ -18,7 +18,7 @@ pub struct RegexMatch {
 pub fn matches_diff(
     diff: &Diff,
     regex: &Regex,
-    gitignore_matcher: &GitignoreMatcher,
+    gcs_ignore_matcher: &GcsIgnoreMatcher,
 ) -> (bool, Vec<RegexMatch>) {
     let mut found_match = false;
     let mut matches = Vec::new();
@@ -43,9 +43,9 @@ pub fn matches_diff(
             if let Some(file_path) = delta.new_file().path() {
                 let file_name = file_path.to_string_lossy().to_string();
 
-                if !has_no_gitignore_mode() {
+                if !has_no_ignore() {
                     let is_ignored =
-                        gitignore_matcher.is_file_ignored(&file_name);
+                        gcs_ignore_matcher.is_file_ignored(&file_name);
                     if is_ignored {
                         return true;
                     }
