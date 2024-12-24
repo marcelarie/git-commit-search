@@ -10,14 +10,14 @@ use std::{env, error::Error, path::Path};
 
 use args::{parse_args, ArgsResult};
 use commit::{process_minimal_mode, process_with_diff_tool, walk_commits};
-use git::open_repository;
+use git::{open_repository, repo::GitignoreMatcher};
 
 fn run() -> Result<(), Box<dyn Error>> {
     let ArgsResult {
         regex_pattern,
         path,
         context_lines: _,
-        no_gitignore: _,
+        no_gitignore,
         diff_tool,
         show_metadata: _,
     } = parse_args();
@@ -25,13 +25,26 @@ fn run() -> Result<(), Box<dyn Error>> {
     let regex = create_regex(regex_pattern)?;
     let repo_path = Path::new(&path);
     let repo = open_repository(repo_path)?;
+    let gitignore_matcher = GitignoreMatcher::new(repo_path, no_gitignore)?;
 
     let commits = walk_commits(&repo)?;
 
     if diff_tool.is_some() {
-        process_with_diff_tool(commits, &repo, &regex, diff_tool)?;
+        process_with_diff_tool(
+            commits,
+            &repo,
+            &regex,
+            diff_tool,
+            gitignore_matcher,
+        )?;
     } else {
-        process_minimal_mode(commits, &repo, &regex, repo_path)?;
+        process_minimal_mode(
+            commits,
+            &repo,
+            &regex,
+            repo_path,
+            gitignore_matcher,
+        )?;
     }
 
     Ok(())

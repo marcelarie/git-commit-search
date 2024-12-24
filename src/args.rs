@@ -22,6 +22,7 @@ pub fn has_show_metadata_mode() -> bool {
     *SHOW_METADATA_GLOBAL.get().unwrap_or(&false)
 }
 
+#[allow(dead_code)]
 pub fn get_repo_path() -> String {
     REPO_PATH_GLOBAL.get().unwrap_or(&String::new()).to_string()
 }
