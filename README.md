@@ -49,28 +49,20 @@ gcs '+version\s*=\s*"\d+\.\d+\.\d+"'
 
 This will search for the string "TODO" in all commits of the specified repository.
 
-## `.gcsignore` file
+## Ignoring Files
 
-The `.gcsignore` file allows you to define patterns for files or directories to
-exclude during your searches. This file provides developers with the flexibility
-to ignore noisy or irrelevant files, even if they exist in past commit diffs.
-
-To use .gcsignore, create a file named .gcsignore in the root of your repository
-and define the patterns you wish to exclude. These patterns work in the same way
-as `.gitignore` patterns and can include file names, directory names, or
-wildcard expressions.
+Create a `.gcsignore` file in any directory of the project to exclude files from searches.
+Like `.gitignore`, it affects the directory it's in and all subdirectories:
 
 For example:
+
 ```gitignore
-# Ignore all markdown files
-*.md
-
-# Ignore a specific directory
-temp/
+# Ignore all markdown files                                                                  ..
+*.md                                                                                         ..
+                                                                                             ..
+# Ignore a specific directory                                                                ..
+temp/                                                                                        ..
 ```
-
-When `.gcsignore` is present, the CLI will respect these patterns and exclude
-matching files or directories from the search.
 
 ## Options
 
@@ -84,6 +76,7 @@ matching files or directories from the search.
 
 - [ ] Improve performance
       gcs 'fn \S+\(.\*\)' -m` on the linux repo: 62m43.462s on minimal mode without changes
+
   - [ ] Regex optimization
   - [ ] Implement parallel processing and thread pools
   - [ ] Incremental updates (cache)
