@@ -1,5 +1,4 @@
 mod args;
-mod commit;
 mod git;
 mod print;
 mod regex_utils;
@@ -9,8 +8,10 @@ use regex_utils::create_regex;
 use std::{env, error::Error, path::Path};
 
 use args::{parse_args, ArgsResult};
-use commit::{process_minimal_mode, process_with_diff_tool, walk_commits};
-use git::{initialize_cache, open_repository, repo::GcsIgnoreMatcher};
+use git::{
+    initialize_cache, open_repository, process_minimal_mode,
+    process_with_diff_tool, walk_commits, GcsIgnoreMatcher,
+};
 
 fn run() -> Result<(), Box<dyn Error>> {
     let ArgsResult {
