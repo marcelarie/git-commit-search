@@ -41,7 +41,8 @@ impl GcsIgnoreMatcher {
             builder.add(gcsignore_file);
         }
 
-        let gcsignore = builder.build().expect("Failed to build gcignore files");
+        let gcsignore =
+            builder.build().expect("Failed to build gcignore files");
 
         Ok(Self {
             gcsignore: Some(gcsignore),

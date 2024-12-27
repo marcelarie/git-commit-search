@@ -10,7 +10,7 @@ use std::{env, error::Error, path::Path};
 
 use args::{parse_args, ArgsResult};
 use commit::{process_minimal_mode, process_with_diff_tool, walk_commits};
-use git::{open_repository, repo::GcsIgnoreMatcher};
+use git::{initialize_cache, open_repository, repo::GcsIgnoreMatcher};
 
 fn run() -> Result<(), Box<dyn Error>> {
     let ArgsResult {
@@ -26,6 +26,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     let repo_path = Path::new(&path);
     let repo = open_repository(repo_path)?;
     let gcsignore_matcher = GcsIgnoreMatcher::new(repo_path, no_ignore)?;
+    initialize_cache(repo_path)?;
 
     let commits = walk_commits(&repo)?;
 
