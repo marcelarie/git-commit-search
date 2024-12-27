@@ -78,7 +78,7 @@ The main features and improvements planned for the tool are listed in the [TODO]
 
 The three main goals are:
 
-- Be reallyu fast.
+- Be really fast.
 - Have an interactive mode with real-time search.
 - Syntax highlighting and good output formatting.
 
