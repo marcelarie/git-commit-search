@@ -16,6 +16,11 @@
 - [ ] Grab multiple matches and use interactive mode on them.
 - [ ] Search using a file pattern. (e.g. `*.rs`).
 
+- [ ] Add shell completions
+  - [x] fish
+  - [ ] bash
+  - [ ] zsh
+  - [ ] nushell
 - [x] Ignore `.gcsignore` rules via parameter (--no-ignore)
 - [x] Search using a dir path. (-p,--path).
 - [ ] Regex search cache to improve performance.
