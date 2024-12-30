@@ -1,7 +1,7 @@
 # Todo
 
 - [ ] Improve performance
-      Note: gcs 'fn \S+\(.\*\)' -m` on the linux repo: 62m43.462s on minimal mode without changes
+      Note: gcs `fn \S+\(.\*\)' -m` on the linux repo: 62m43.462s on minimal mode without changes
 
   - [ ] Implement parallel processing and thread pools
   - [ ] Incremental updates (cache)

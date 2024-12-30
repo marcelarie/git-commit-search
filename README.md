@@ -72,7 +72,7 @@ temp/
   bottom of the match (optional, defaults to 1).
 - **`--no-ignore`**: Ignore `.gcsignore` rules.
 
-### On the Roadmap
+## On the Roadmap
 
 The main features and improvements planned for the tool are listed in the [TODO](TODO.md) file.
 
