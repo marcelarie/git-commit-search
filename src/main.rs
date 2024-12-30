@@ -21,6 +21,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         no_ignore,
         diff_tool,
         show_metadata: _,
+        completion: _,
     } = parse_args();
 
     let regex = create_regex(regex_pattern)?;
