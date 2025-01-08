@@ -9,7 +9,8 @@ regex. Then it prints all the matches.
 ## Features
 
 - Search for specific patterns via regex on all commits and diffs.
-- Respects gitignore rules by default.
+- Ignore file (`.gcsignore`) to exclude files or directories from the search,
+  works like a `.gitignore` file but for the search.
 - Display matching content.
 
 ## Installation
@@ -48,32 +49,38 @@ gcs '+version\s*=\s*"\d+\.\d+\.\d+"'
 
 This will search for the string "TODO" in all commits of the specified repository.
 
+## Ignoring Files
+
+Create a `.gcsignore` file in any directory of the project to exclude files from searches.
+Like `.gitignore`, it affects the directory it's in and all subdirectories:
+
+For example:
+
+```gitignore
+# Ignore all markdown files
+*.md
+
+# Ignore a specific directory
+temp/
+```
+
 ## Options
 
 - **`-p, --path`**: The path to the repository (optional, defaults to the
   current directory).
 - **`-l, --conlines`**: The number of context lines to display on the top and
   bottom of the match (optional, defaults to 1).
-- **`--no-gitignore`**: Ignore `.gitignore` rules.
+- **`--no-ignore`**: Ignore `.gcsignore` rules.
 
-## Todo
+## On the Roadmap
 
-- [ ] Interactive mode.
-  - [ ] Real time regex search.
-  - [ ] View the whole commit.
-  - [ ] View the whole diff.
-  - [ ] Go to next match
-  - [ ] Go to prev match
-  - [ ] Show file and commit in GitLab or GitHub.
-- [ ] Grab multiple matches and use interactive mode on them.
-- [ ] Search using a file pattern. (e.g. `*.rs`).
-- [ ] Implement
-      [tree-sitter-highlight](https://crates.io/crates/tree-sitter-highlight) crate
-      for diff syntax highlighting
+The main features and improvements planned for the tool are listed in the [TODO](TODO.md) file.
 
-- [x] Search using a dir path. (-p,--path).
-- [x] Show context lines. (-l,--conlines).
-- [x] Ignore `.gitignore` rules via parameter (--no-gitignore)
+The three main goals are:
+
+- Be really fast.
+- Have an interactive mode with real-time search.
+- Syntax highlighting and good output formatting.
 
 ## Dependencies
 

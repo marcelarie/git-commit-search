@@ -1,46 +1,68 @@
 mod args;
-mod commit;
-mod diff;
-mod utils;
+mod git;
+mod print;
+mod regex_utils;
 
-use args::parse_args;
-use diff::show::print_commit_content;
-use git2::Repository;
-use regex::Regex;
+use colored::*;
+use regex_utils::create_regex;
+use std::{env, error::Error, path::Path};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let (regex, path, context_lines, no_gitignore) = parse_args();
+use args::{parse_args, ArgsResult};
+use git::{
+    initialize_cache, open_repository, process_minimal_mode,
+    process_with_diff_tool, walk_commits, GcsIgnoreMatcher,
+};
 
-    let regex = Regex::new(&regex)?;
-    let repo = Repository::open(&path)?;
+fn run() -> Result<(), Box<dyn Error>> {
+    let ArgsResult {
+        regex_pattern,
+        path,
+        context_lines: _,
+        no_ignore,
+        diff_tool,
+        show_metadata: _,
+        completion: _,
+    } = parse_args();
 
-    // Walk through commits
-    let mut revwalk = repo.revwalk()?;
-    revwalk.push_head()?;
+    let regex = create_regex(regex_pattern)?;
+    let repo_path = Path::new(&path);
+    let repo = open_repository(repo_path)?;
+    let gcsignore_matcher = GcsIgnoreMatcher::new(repo_path, no_ignore)?;
+    initialize_cache(repo_path)?;
 
-    for oid in revwalk {
-        let oid = oid?;
-        let commit = repo.find_commit(oid)?;
-        let commit_id = commit.id();
-        let tree = commit.tree()?;
+    let commits = walk_commits(&repo)?;
 
-        let diff = match commit.parents().next() {
-            Some(parent) => {
-                let parent_tree = parent.tree()?;
-                repo.diff_tree_to_tree(Some(&parent_tree), Some(&tree), None)?
-            }
-            None => repo.diff_tree_to_tree(None, Some(&tree), None)?,
-        };
-
-        print_commit_content(
-            &diff,
+    if diff_tool.is_some() {
+        process_with_diff_tool(
+            commits,
+            &repo,
             &regex,
-            commit_id,
-            context_lines,
-            &path,
-            no_gitignore,
+            diff_tool,
+            gcsignore_matcher,
+        )?;
+    } else {
+        process_minimal_mode(
+            commits,
+            &repo,
+            &regex,
+            repo_path,
+            gcsignore_matcher,
         )?;
     }
 
     Ok(())
+}
+
+fn main() {
+    if let Err(error) = run() {
+        eprintln!("{}\n{}\n", "Error:".red().bold(), error);
+
+        // Shown in debug mode
+        // if let Some(cause) = error.source() {
+        //     eprintln!("{}\n{}\n", "Caused by:".bold().blue(), cause);
+        // }
+
+        println!("Please use --help for more information.");
+        std::process::exit(1);
+    }
 }
