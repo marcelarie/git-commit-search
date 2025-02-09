@@ -9,7 +9,7 @@ pub struct ArgsResult {
     pub no_ignore:  bool,
     pub diff_tool:     Option<String>,
     pub show_metadata: bool,
-    pub completion: String,
+    // pub completion: String,
     // pub file_pattern:  Option<String>,
     // pub interactive:   bool,
 }
@@ -100,7 +100,7 @@ pub fn parse_args() -> ArgsResult {
     let diff_tool = matches.get_one::<String>("diff-tool").cloned();
     let no_ignore = matches.get_flag("no-ignore");
     let show_metadata = matches.get_flag("show-metadata");
-    let completion = matches.get_one::<String>("completion").unwrap().to_string();
+    // let completion = matches.get_one::<String>("completion").unwrap().to_string();
 
     SHOW_METADATA_GLOBAL.get_or_init(|| show_metadata);
     REPO_PATH_GLOBAL.get_or_init(|| path.clone());
@@ -113,6 +113,6 @@ pub fn parse_args() -> ArgsResult {
         no_ignore,
         diff_tool,
         show_metadata,
-        completion
+        // completion
     }
 }
