@@ -78,6 +78,7 @@ The main features and improvements planned for the tool are listed in the [TODO]
 
 The three main goals are:
 
+- Add ranges, from commit A to B, or from HEAD~1 to HEAD\~100
 - Be really fast.
 - Have an interactive mode with real-time search.
 - Syntax highlighting and good output formatting.
