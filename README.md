@@ -15,10 +15,16 @@ regex. Then it prints all the matches.
 
 ## Installation
 
-Clone the repository and build the tool using `cargo`:
-
 ```bash
 cargo install --git https://github.com/marcelarie/git-commit-search
+```
+
+or clone the repository and build the tool using `cargo`:
+
+```bash
+git clone https://github.com/marcelarie/git-commit-search
+cd git-commit-search
+cargo build --release
 ```
 
 ## Usage
