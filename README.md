@@ -18,9 +18,7 @@ regex. Then it prints all the matches.
 Clone the repository and build the tool using `cargo`:
 
 ```bash
-git clone https://github.com/marcelarie/git-commit-search
-cd git-commit-search
-cargo build --release
+cargo install --git https://github.com/marcelarie/git-commit-search
 ```
 
 ## Usage
@@ -46,8 +44,6 @@ gcs "(?i)(password|api_key)\s*=\s*['\"][^'\"]+['\"]"
 # Find version bumps in Cargo.toml
 gcs '+version\s*=\s*"\d+\.\d+\.\d+"'
 ```
-
-This will search for the string "TODO" in all commits of the specified repository.
 
 ## Ignoring Files
 
