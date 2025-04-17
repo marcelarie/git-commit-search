@@ -33,6 +33,9 @@
 - [ ] Add flag to search the commit message too.
 - [ ] Show context lines. (-l,--conlines).
 
+- [x] shell.nix
+- [x] flake.nix
+
 # Discarded
 
 - [ ] ~~Implement
