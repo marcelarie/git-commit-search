@@ -93,7 +93,7 @@ Once you have Nix installed with flakes enabled, you don’t need to install Rus
 or any other tooling locally.
 
 ```bash
-nix development 
+nix develop
 ```
 
 ## Dependencies
