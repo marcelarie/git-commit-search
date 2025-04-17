@@ -22,6 +22,7 @@
           rustfmt
           clippy
           rust-analyzer
+          bacon
         ];
 
         shellHook = ''
