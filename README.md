@@ -88,7 +88,7 @@ The three main goals are:
 
 ## Development
 
-This project provides a reproducible development shell via [Nix Flakes](https://nix.dev/concepts/flakes.html). 
+This project provides a reproducible development shell via [Nix Flakes](https://nix.dev/concepts/flakes.html). \
 Once you have Nix installed with flakes enabled, you don’t need to install Rust
 or any other tooling locally.
 
