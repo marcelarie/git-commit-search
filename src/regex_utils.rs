@@ -37,6 +37,12 @@ pub fn matches_diff(
             return true;
         }
 
+        // Skip context lines
+        let line_origin = line.origin();
+        if line_origin != '+' && line_origin != '-' {
+            return true;
+        }
+
         if let Some(match_result) = regex.find(&content) {
             let match_text = match_result.as_str().to_string();
 
